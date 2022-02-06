@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ffbb7c0b5b47049e551cb3d2f67689, type: 3}
+  m_Name: NormalSitizen
+  m_EditorClassIdentifier: 
+  Type: 0
+  LootType: 1
+  Template: {fileID: 1994896122218397387, guid: e602ffd038ca6da46ab53b5b0558ad67, type: 3}
+  WaitingTimeForOrder: 25
+  _minLootCount: 2
+  _maxnLootCount: 5
+  _visualTemplates:
+  - {fileID: 3178738436769333409, guid: 3c21a77a126b0bb42a97b02a66402bf7, type: 3}
+  - {fileID: 7527454283404973594, guid: 48fbf1fd8ba5bd148abd6c2171478d2c, type: 3}
+  - {fileID: 8291617381181362423, guid: 242ddc35b8fbd944c854cb1c6012956e, type: 3}
+  - {fileID: 6820479900793905819, guid: 64bad216674501b4987f87d273cf539a, type: 3}

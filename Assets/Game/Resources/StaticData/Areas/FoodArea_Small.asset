@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7051ba9621b14d749f7d44b51a657ae7, type: 3}
+  m_Name: FoodArea_Small
+  m_EditorClassIdentifier: 
+  AreaType: 0
+  AreaCost: 75
+  TableTemplate: {fileID: 4531244864103784379, guid: 07d23757c49a1174cb88a5a5c9402dba, type: 3}
