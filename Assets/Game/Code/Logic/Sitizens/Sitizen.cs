@@ -44,9 +44,6 @@ namespace Game.Code.Logic.Sitizens
         private Food _food;
         public SitizenState _state;
 
-        // спасиба юнити-хуюнити за то что хорошо обрабатываешь тригерры
-        private bool _enteredOnSpot = false;
-
         private bool _serviced;
         public bool Serviced => _serviced;
 
@@ -64,6 +61,7 @@ namespace Game.Code.Logic.Sitizens
 
             _movement = new SitizenMovement(_animator, _agent, waypointNetwork);
             _movement.ReachedToLastPoint += OnReachedToLastPoint;
+            _movement.ReachedToTarget += OnReachedToTarget;
 
             _employment = new SitizenEmployment(_animator, _agent, this, _sitizenData.WaitingTimeForOrder);
             _employment.EmploymentEnded += OnEmploymentEnded;
@@ -101,7 +99,6 @@ namespace Game.Code.Logic.Sitizens
         private void SetDefaultProps(Vector3 position)
         {
             transform.position = position;
-            _enteredOnSpot = false;
             _serviced = false;
             _spot = null;
             _food = null;
@@ -127,7 +124,13 @@ namespace Game.Code.Logic.Sitizens
             _movement.Move();
 
         private void MovementToSpot() =>
-            _movement.MoveTo(_spot.transform);
+            _movement.MoveTo(transform, _spot.transform);
+        
+        private void OnReachedToTarget()
+        {
+            SetState(SitizenState.None);
+            _employment.Start(_spot, transform);
+        }
         
         private void OnReachedToLastPoint() {
             _movement.ReachedToLastPoint -= OnReachedToLastPoint;
@@ -155,20 +158,6 @@ namespace Game.Code.Logic.Sitizens
             _serviced = true;
             _employment.StartInteraction();
             _foodIndicator.Hide();
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (_enteredOnSpot == false)
-                if (other.TryGetComponent(out Spot spot))
-                {
-                    if (spot == _spot)
-                    {
-                        _enteredOnSpot = true;
-                        SetState(SitizenState.None);
-                        _employment.Start(_spot, transform);
-                    }
-                }
         }
 
         private void OnStartWaitingOrder()

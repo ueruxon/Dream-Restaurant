@@ -6,6 +6,7 @@ namespace Game.Code.Logic.Sitizens
 {
     public class SitizenMovement
     {
+        public event Action ReachedToTarget;
         public event Action ReachedToWaypoint;
         public event Action ReachedToLastPoint;
 
@@ -60,15 +61,22 @@ namespace Game.Code.Logic.Sitizens
             return true;
         }
 
-        public void MoveTo(Transform target, float remainingDistance = 0.5f)
+        public void MoveTo(Transform currentTransform, Transform target, float remainingDistance = 0.3f)
         {
             if (_agent.enabled == false)
                 _agent.enabled = true;
-            
+
             if (_alreadyMove)
             {
-                if (!_agent.pathPending && _agent.remainingDistance < remainingDistance) 
+                if (!_agent.pathPending && _agent.remainingDistance < remainingDistance)
+                {
                     _alreadyMove = false;
+
+                    float distanceToTarget = Vector3.Distance(currentTransform.position, target.position);
+
+                    if (distanceToTarget < remainingDistance) 
+                        ReachedToTarget?.Invoke();
+                }
             }
             else
             {
