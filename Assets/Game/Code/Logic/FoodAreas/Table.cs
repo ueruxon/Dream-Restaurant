@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 using Game.Code.Logic.Sitizens;
 
 namespace Game.Code.Logic.FoodAreas
@@ -13,6 +14,8 @@ namespace Game.Code.Logic.FoodAreas
         public void Init()
         {
             _pendingClients = new Dictionary<IClient, Spot>();
+
+            transform.DOShakeScale(1f, 0.4f);
 
             foreach (Spot spot in _spots)
             {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Game.Code.Common;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Game.Code.Logic.Collectables
 {
@@ -18,23 +19,40 @@ namespace Game.Code.Logic.Collectables
         private Vector3 _startRelativeCenter;
         private Vector3 _endRelativeCenter;
 
+        private Sequence _jumpSequence;
+
         public void Init(FoodType foodType)
         {
             Type = foodType;
         }
 
-        public override void MoveTo(Vector3 position)
+        public override void MoveTo(Vector3 endPosition)
         {
-            CalculatePositionsForSlerpMovement(position);
-            StartCoroutine(MovementSlerpRoutine());
+            JumpTo(endPosition);
+            
+            // slerp test movement
+            //CalculatePositionsForSlerpMovement(position);
+            //StartCoroutine(MovementSlerpRoutine());
             //StartCoroutine(MovementRoutine(position));
         }
 
         public override float GetHeight() => 
             _collider.bounds.size.y;
 
-        public override void DestroyCollectable() => 
+        public override void DestroyCollectable() {
+            _jumpSequence.Kill();
             Destroy(gameObject);
+        }
+
+        private void JumpTo(Vector3 endPosition)
+        {
+            _jumpSequence = transform.DOLocalJump(
+                endValue: endPosition,
+                jumpPower: 1,
+                numJumps: 1,
+                duration: 0.5f
+            ).SetEase(Ease.InOutSine);
+        }
 
         private void CalculatePositionsForSlerpMovement(Vector3 endPosition)
         {
@@ -65,7 +83,7 @@ namespace Game.Code.Logic.Collectables
                 yield return null;
             }
         }
-        
+
         private IEnumerator MovementSlerpRoutine()
         {
             float currentPathValue = 0;

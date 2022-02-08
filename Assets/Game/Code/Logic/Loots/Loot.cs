@@ -15,22 +15,23 @@ namespace Game.Code.Logic.Loots
         private LootView _currentLootView;
         private LootStaticData _lootData;
 
-        private float _slerpSpeed = 1f;
+        // private float _slerpSpeed = 1f;
         private float _speed = 3f;
-        
-        private Vector3 _centerPosition;
-        private Vector3 _endPosition;
-        private Vector3 _startRelativeCenter;
-        private Vector3 _endRelativeCenter;
 
-        private float _startTime;
+        private Vector3 _endPosition;
+        // private Vector3 _centerPosition;
+        // private Vector3 _startRelativeCenter;
+        // private Vector3 _endRelativeCenter;
+        //
+        // private float _startTime;
 
         private ICollector _target;
         private bool _isFollowing;
         private Vector3 _velocity;
         
         private Tween _rotationTween;
-        
+        private Sequence _jumpSequence;
+
         public void Init(LootStaticData lootData, Vector3 center, Vector3 end)
         {
             _lootData = lootData;
@@ -40,22 +41,24 @@ namespace Game.Code.Logic.Loots
                 _trail.startColor = _lootData.Color;
                 _trail.endColor = _lootData.Color;
             }
-            
-            _centerPosition = center;
+
             _endPosition = end;
-            
-            _startRelativeCenter = transform.position - _centerPosition;
-            _endRelativeCenter = _endPosition - _centerPosition;
-            
-            _startTime = Time.time;
+            // _centerPosition = center;
+
+            // _startRelativeCenter = transform.position - _centerPosition;
+            // _endRelativeCenter = _endPosition - _centerPosition;
+            //
+            // _startTime = Time.time;
             
             ActiveView();
         }
 
         public void StartMoving()
         {
-            StartCoroutine(MovementSlerpRoutine());
+            JumpTo(_endPosition);
             RandomRotation();
+            
+            //StartCoroutine(MovementSlerpRoutine());
         }
 
         private void Update()
@@ -97,26 +100,39 @@ namespace Game.Code.Logic.Loots
         private void OnCollected(ICollector collector)
         {
             collector.AddMoney(_lootData.Amount);
+            
             _rotationTween.Kill();
+            _jumpSequence.Kill();
+            
             _currentLootView.Collected -= OnCollected;
             _currentLootView.Hide();
 
             StartCoroutine(DestroyLootRoutine());
         }
-
-        private IEnumerator MovementSlerpRoutine()
+        
+        private void JumpTo(Vector3 endPosition)
         {
-            float currentPathValue = 0;
-            
-            while (currentPathValue < 1f)
-            {
-                currentPathValue = (Time.time - _startTime) / 1f * _slerpSpeed;
-                
-                transform.position = Vector3.Slerp(_startRelativeCenter, _endRelativeCenter, currentPathValue * _slerpSpeed);
-                transform.position += _centerPosition;
-                yield return null;
-            }
+            _jumpSequence = transform.DOLocalJump(
+                endValue: endPosition,
+                jumpPower: 1,
+                numJumps: 2,
+                duration: 1f
+            ).SetEase(Ease.Linear);
         }
+
+        // private IEnumerator MovementSlerpRoutine()
+        // {
+        //     float currentPathValue = 0;
+        //     
+        //     while (currentPathValue < 1f)
+        //     {
+        //         currentPathValue = (Time.time - _startTime) / 1f * _slerpSpeed;
+        //         
+        //         transform.position = Vector3.Slerp(_startRelativeCenter, _endRelativeCenter, currentPathValue * _slerpSpeed);
+        //         transform.position += _centerPosition;
+        //         yield return null;
+        //     }
+        // }
         
         private void RandomRotation()
         {

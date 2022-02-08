@@ -44,7 +44,7 @@ namespace Game.Code.Logic.Sitizens
         private SitizenAnimatorState StateFor(int stateHash)
         {
             SitizenAnimatorState state;
-            
+
             if (stateHash == _walkingStateHash)
                 state = SitizenAnimatorState.Walking;
             else if (stateHash == _standToSitHash)
